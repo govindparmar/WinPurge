@@ -71,12 +71,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 			hRes = Process32First(hSnapShot, &entry);
 			while (hRes)
 			{
-				if (wcscmp(entry.szExeFile, L"explorer.exe") == 0)
+				if (wcscmp(entry.szExeFile, TEXT("explorer.exe")) == 0)
 				{
 					hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)entry.th32ProcessID);
 					TerminateProcess(hProcess, 9);
 					CloseHandle(hProcess);
-					GetEnvironmentVariable(L"username", username, 32);
+					GetEnvironmentVariable(TEXT("username"), username, 32);
 					wsprintf(fPath, TEXT("C:\\Users\\%s\\AppData\\Local\\IconCache.db"), username);
 					DeleteFile(fPath);
 
