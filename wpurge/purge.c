@@ -63,7 +63,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		if ((HWND)lParam == FindWindowEx(hWnd, NULL, TEXT("BUTTON"), NULL))
 		{
 			PROCESSENTRY32 entry;
-			HANDLE hSnapShot, hProcess, hFile;
+			HANDLE hSnapShot, hProcess;
 			BOOL hRes;
 			TCHAR fPath[MAX_PATH], username[32];
 			entry.dwSize = sizeof(PROCESSENTRY32);
