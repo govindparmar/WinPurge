@@ -4,10 +4,10 @@
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK EnumChildProc(HWND hWnd, LPARAM lParam);
-TCHAR szClassName[] = TEXT("PurgeCacheWnd");
+WCHAR szClassName[] = L"PurgeCacheWnd";
 
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
 	WNDCLASSEX wc;
 	MSG Msg;
@@ -28,8 +28,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	RegisterClassEx(&wc);
 
-	hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szClassName, TEXT("Clear Caches"), WS_VISIBLE | WS_SYSMENU, 100, 100, 200, 150, NULL, NULL, hInstance, NULL);
-	hRun = CreateWindow(TEXT("BUTTON"), TEXT("Start"), WS_VISIBLE | WS_CHILD | BS_TEXT, 10, 10, 150, 30, hWnd, NULL, hInstance, NULL);
+	hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szClassName, L"Clear Icon Cache", WS_VISIBLE | WS_SYSMENU, 100, 100, 200, 150, NULL, NULL, hInstance, NULL);
+	hRun = CreateWindow(L"BUTTON", L"Clear Icon Cache", WS_VISIBLE | WS_CHILD | BS_TEXT, 10, 10, 150, 30, hWnd, NULL, hInstance, NULL);
 
 	ShowWindow(hWnd, SW_SHOW);
 	EnumChildWindows(hWnd, EnumChildProc, 0);
@@ -60,24 +60,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		DestroyWindow(hWnd);
 		break;
 	case WM_COMMAND:
-		if ((HWND)lParam == FindWindowEx(hWnd, NULL, TEXT("BUTTON"), NULL))
+		if ((HWND)lParam == FindWindowEx(hWnd, NULL, L"BUTTON", NULL))
 		{
 			PROCESSENTRY32 entry;
 			HANDLE hSnapShot, hProcess;
 			BOOL hRes;
-			TCHAR fPath[MAX_PATH], username[32];
+			WCHAR fPath[MAX_PATH], username[32];
 			entry.dwSize = sizeof(PROCESSENTRY32);
 			hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
 			hRes = Process32First(hSnapShot, &entry);
 			while (hRes)
 			{
-				if (wcscmp(entry.szExeFile, TEXT("explorer.exe")) == 0)
+				if (wcscmp(entry.szExeFile, L"explorer.exe") == 0)
 				{
 					hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)entry.th32ProcessID);
 					TerminateProcess(hProcess, 0);
 					CloseHandle(hProcess);
-					GetEnvironmentVariable(TEXT("username"), username, 32);
-					wsprintf(fPath, TEXT("C:\\Users\\%s\\AppData\\Local\\IconCache.db"), username);
+					GetEnvironmentVariable(L"username", username, 32);
+					wsprintf(fPath, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username);
 					DeleteFile(fPath);
 
 				}
