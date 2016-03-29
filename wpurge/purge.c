@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <Psapi.h>
 #include <TlHelp32.h>
+#include <strsafe.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK EnumChildProc(HWND hWnd, LPARAM lParam);
@@ -54,13 +55,14 @@ BOOL CALLBACK EnumChildProc(HWND hWnd, LPARAM lParam)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
+	HWND hButton = FindWindowEx(hWnd, NULL, L"BUTTON", NULL);
 	switch (Msg)
 	{
 	case WM_CLOSE:
 		DestroyWindow(hWnd);
 		break;
 	case WM_COMMAND:
-		if ((HWND)lParam == FindWindowEx(hWnd, NULL, L"BUTTON", NULL))
+		if ((HWND)lParam == hButton)
 		{
 			PROCESSENTRY32 entry;
 			HANDLE hSnapShot, hProcess;
@@ -77,7 +79,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 					TerminateProcess(hProcess, 0);
 					CloseHandle(hProcess);
 					GetEnvironmentVariable(L"username", username, 32);
-					wsprintf(fPath, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username);
+					StringCchPrintf(fPath, MAX_PATH, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username);
 					DeleteFile(fPath);
 
 				}
