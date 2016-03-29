@@ -74,7 +74,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 				if (wcscmp(entry.szExeFile, TEXT("explorer.exe")) == 0)
 				{
 					hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)entry.th32ProcessID);
-					TerminateProcess(hProcess, 9);
+					TerminateProcess(hProcess, 0);
 					CloseHandle(hProcess);
 					GetEnvironmentVariable(TEXT("username"), username, 32);
 					wsprintf(fPath, TEXT("C:\\Users\\%s\\AppData\\Local\\IconCache.db"), username);
