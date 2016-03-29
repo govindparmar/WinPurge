@@ -6,6 +6,10 @@
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK EnumChildProc(HWND hWnd, LPARAM lParam);
+VOID WINAPI OnClose(HWND hWnd);
+VOID WINAPI OnDestroy(HWND hWnd);
+VOID WINAPI OnCommand(HWND hWnd, INT nID, HWND hwSource, UINT uNotify);
+
 WCHAR szClassName[] = L"PurgeCacheWnd";
 
 
