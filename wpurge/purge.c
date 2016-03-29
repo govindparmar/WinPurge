@@ -81,7 +81,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 					GetEnvironmentVariable(L"username", username, 32);
 					StringCchPrintf(fPath, MAX_PATH, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username);
 					DeleteFile(fPath);
-
+					// NOTE: No break after successful find because there may be more than one instance of explorer.exe running (folder windows etc.)
 				}
 				hRes = Process32Next(hSnapShot, &entry);
 			}
