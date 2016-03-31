@@ -18,7 +18,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 	WNDCLASSEX wc;
 	MSG Msg;
 	HWND hWnd, hRun;
-
+	
 	wc.cbWndExtra = 0;
 	wc.cbClsExtra = 0;
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -76,7 +76,8 @@ VOID WINAPI OnCommand(HWND hWnd, INT nID, HWND hwSource, UINT uNotify)
 		PROCESSENTRY32 entry;
 		HANDLE hSnapShot, hProcess;
 		BOOL hRes;
-		WCHAR fPath[MAX_PATH], username[32];
+		WCHAR fPath[MAX_PATH], username[32], mbBuf[1000];
+		LPWSTR lpMsgBuf;
 		entry.dwSize = sizeof(PROCESSENTRY32);
 		hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
 		hRes = Process32First(hSnapShot, &entry);
@@ -88,8 +89,34 @@ VOID WINAPI OnCommand(HWND hWnd, INT nID, HWND hwSource, UINT uNotify)
 				TerminateProcess(hProcess, 0);
 				CloseHandle(hProcess);
 				GetEnvironmentVariable(L"username", username, 32);
-				StringCchPrintf(fPath, MAX_PATH, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username);
-				DeleteFile(fPath);
+				if(SUCCEEDED(StringCchPrintf(fPath, MAX_PATH, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username)))
+				{
+					BOOL del = DeleteFile(fPath);
+					DWORD le = GetLastError();
+					if (del)
+					{
+						if (SUCCEEDED(StringCchPrintf(mbBuf, 1000, L"The icon cache database was successfully purged.", fPath)))
+						{
+							MessageBox(0, mbBuf, L"Success", MB_OK | MB_ICONASTERISK);
+						}
+					}
+					else
+					{
+						if (le == ERROR_FILE_NOT_FOUND)
+						{
+							MessageBox(0, L"Nothing to purge: The icon cache database could not be found.", L"Information", MB_OK | MB_ICONASTERISK);
+						}
+						else
+						{
+							FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, le, 0, (LPWSTR)&lpMsgBuf, 0, NULL);
+							if (SUCCEEDED(StringCchPrintf(mbBuf, 1000, L"The following error occured while attempting to purge the cache:\r\n\r\n%s", lpMsgBuf)))
+							{
+								MessageBox(0, mbBuf, L"Error", MB_OK | MB_ICONSTOP);
+							}
+						}
+					}
+
+				}
 				// NOTE: No break after successful find because there may be more than one instance of explorer.exe running (folder windows etc.); only safe method is to kill all
 			}
 			hRes = Process32Next(hSnapShot, &entry);
