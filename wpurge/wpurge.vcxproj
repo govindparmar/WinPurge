@@ -14,18 +14,19 @@
     <ProjectGuid>{93368833-FE60-456E-B684-0571A1BD80E5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>wpurge</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -78,7 +79,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="purge.c" />
+    <ClCompile Include="enumchildproc.c" />
+    <ClCompile Include="onclose.c" />
+    <ClCompile Include="oncommand.c" />
+    <ClCompile Include="oncreate.c" />
+    <ClCompile Include="ondestroy.c" />
+    <ClCompile Include="wwinmain.c" />
+    <ClCompile Include="registerwcex.c" />
+    <ClCompile Include="windowproc.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WP.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

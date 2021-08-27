@@ -15,8 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="purge.c">
+    <ClCompile Include="wwinmain.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="registerwcex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="onclose.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oncommand.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oncreate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ondestroy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enumchildproc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowproc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
