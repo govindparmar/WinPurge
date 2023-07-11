@@ -4,14 +4,13 @@ CONST WCHAR g_wszClassName[] = L"PurgeCacheWnd";
 
 INT APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ INT nShowCmd)
 {
+	HWND hWnd;
 	MSG Msg;
-	HWND hWnd, hRun;
 	NONCLIENTMETRICSW ncm;
 	HFONT hfDefault;
 
 	ZeroMemory(&ncm, sizeof(NONCLIENTMETRICSW));
 	ncm.cbSize = sizeof(NONCLIENTMETRICSW);
-
 	SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICSW), &ncm, FALSE);
 	hfDefault = CreateFontIndirectW(&ncm.lfMessageFont);
 	
@@ -27,7 +26,6 @@ INT APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		MessageBoxW(NULL, L"Window creation failed", L"Clear Icon Cache", MB_OK | MB_ICONSTOP);
 		return -1;
 	}
-	hRun = CreateWindowW(L"BUTTON", L"Clear Icon Cache", WS_VISIBLE | WS_CHILD | BS_TEXT, 10, 10, 150, 30, hWnd, NULL, hInstance, NULL);
 
 	ShowWindow(hWnd, SW_SHOW);
 	EnumChildWindows(hWnd, EnumChildProc, (LPARAM)&hfDefault);
@@ -40,5 +38,5 @@ INT APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		DispatchMessageW(&Msg);
 	}
 
-	return (INT)Msg.wParam;
+	return (INT) Msg.wParam;
 }

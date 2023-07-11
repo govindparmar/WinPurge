@@ -8,9 +8,10 @@ VOID WINAPI OnCommand(_In_ HWND hWnd, _In_ INT nID, _In_ HWND hwSource, _In_ UIN
 		PROCESSENTRY32W entry;
 		HANDLE hSnapShot, hProcess;
 		BOOL hRes;
-		WCHAR fPath[MAX_PATH], username[32], mbBuf[1000];
+		WCHAR fPath[MAX_PATH], username[32], mbBuf[1000], localAppData[MAX_PATH];
+
 		LPWSTR lpMsgBuf;
-		entry.dwSize = sizeof(PROCESSENTRY32);
+		entry.dwSize = sizeof(PROCESSENTRY32W);
 		hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
 		hRes = Process32FirstW(hSnapShot, &entry);
 		while (hRes)
@@ -21,7 +22,12 @@ VOID WINAPI OnCommand(_In_ HWND hWnd, _In_ INT nID, _In_ HWND hwSource, _In_ UIN
 				TerminateProcess(hProcess, 0);
 				CloseHandle(hProcess);
 				GetEnvironmentVariableW(L"username", username, 32);
-				if (SUCCEEDED(StringCchPrintfW(fPath, MAX_PATH, L"C:\\Users\\%s\\AppData\\Local\\IconCache.db", username)))
+				GetEnvironmentVariableW(L"LOCALAPPDATA", localAppData, MAX_PATH);
+#ifdef USING_PATHCCH
+				if (SUCCEEDED(PathCchCombine(fPath, MAX_PATH, localAppData, L"IconCache.db")))
+#else
+				if(PathCombineW(fPath, localAppData, L"IconCache.db"))
+#endif
 				{
 					BOOL del = DeleteFileW(fPath);
 					DWORD le = GetLastError();
@@ -33,17 +39,15 @@ VOID WINAPI OnCommand(_In_ HWND hWnd, _In_ INT nID, _In_ HWND hwSource, _In_ UIN
 					}
 					else
 					{
-						if (le == ERROR_FILE_NOT_FOUND)
+						if (ERROR_FILE_NOT_FOUND == le)
 						{
 							MessageBoxW(NULL, L"Nothing to purge: The icon cache database could not be found.", L"Information", MB_OK | MB_ICONASTERISK);
 						}
 						else
 						{
 							FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, le, 0, (LPWSTR)&lpMsgBuf, 0, NULL);
-							if (SUCCEEDED(StringCchPrintfW(mbBuf, 1000, L"The following error occured while attempting to purge the cache:\r\n\r\n%s", lpMsgBuf)))
-							{
-								MessageBoxW(NULL, mbBuf, L"Error", MB_OK | MB_ICONSTOP);
-							}
+							StringCchPrintfW(mbBuf, 1000, L"The following error occured while attempting to purge the cache:\r\n\r\n%s", lpMsgBuf);
+							MessageBoxW(NULL, mbBuf, L"Error", MB_OK | MB_ICONSTOP);
 							LocalFree((HLOCAL)lpMsgBuf);
 						}
 					}
@@ -53,5 +57,6 @@ VOID WINAPI OnCommand(_In_ HWND hWnd, _In_ INT nID, _In_ HWND hwSource, _In_ UIN
 			}
 			hRes = Process32NextW(hSnapShot, &entry);
 		}
+		CloseHandle(hSnapShot);
 	}
 }

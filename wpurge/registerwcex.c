@@ -8,7 +8,7 @@ ATOM WINAPI RegisterWCEX(_In_ HINSTANCE hInstance)
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wcex.hCursor = LoadCursorW(NULL, IDC_ARROW);
-	wcex.hIcon = LoadIconW(NULL, IDI_APPLICATION);
+	wcex.hIcon = 
 	wcex.hIconSm = LoadIconW(NULL, IDI_APPLICATION);
 	wcex.hInstance = hInstance;
 	wcex.lpfnWndProc = WindowProc;
